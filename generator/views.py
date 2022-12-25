@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.shortcuts import HttpResponse
+import random
+import datetime
 
 
 def home(request):
@@ -7,8 +8,25 @@ def home(request):
 
 
 def about(request):
-    return render(request, "about.html")
+    y = datetime.datetime.now().year
+    return render(request, "about.html", {'year': y})
 
 
 def password(request):
-    return render(request, "password.html")
+    length = int(request.GET.get('length'))
+    uppercase = request.GET.get('uppercase')
+    numbers = request.GET.get('numbers')
+    symbols = request.GET.get("symbols")
+
+    chars = list('')
+    if uppercase:
+        chars.extend("QWERTYUIOPASDFGHJKLZXCVBNM")
+    if numbers:
+        chars.extend("1234567890")
+    if symbols:
+        chars.extend("@#$%&")
+
+    thepass = ''
+    for i in range(length):
+        thepass += random.choice(chars)
+    return render(request, "password.html", {'password': thepass})
